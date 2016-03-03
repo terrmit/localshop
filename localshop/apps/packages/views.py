@@ -21,8 +21,9 @@ from localshop.apps.packages.mixins import RepositoryMixin
 from localshop.apps.packages.pypi import get_search_names
 from localshop.apps.packages.tasks import fetch_package
 from localshop.apps.packages.utils import (
-    get_versio_versioning_scheme, parse_distutils_request)
+    get_versio_versioning_scheme, parse_distutils_request, md5_hash_file)
 from localshop.apps.permissions.mixins import RepositoryAccessMixin
+
 
 logger = logging.getLogger(__name__)
 Version.set_supported_version_schemes((Simple3VersionScheme, Simple4VersionScheme, Pep440VersionScheme,))
@@ -262,6 +263,8 @@ def handle_register_or_upload(post_data, files, user, repository):
         if not form_file.is_valid():
             return HttpResponseBadRequest('ERRORS %s' % form_file.errors)
         release_file = form_file.save(commit=False)
+        release_file.save()
+        release_file.md5_digest = md5_hash_file(release_file.distribution)
         release_file.save()
 
     return HttpResponse()
