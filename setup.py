@@ -37,6 +37,7 @@ setup(
         'netaddr==0.7.19',
         'psycopg2==2.8.5',
         'redis==3.5.3',
+        'social-auth-app-django==1.2.0',
     ],
     tests_require=tests_require,
     extras_require={'test': tests_require},
