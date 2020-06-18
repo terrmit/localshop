@@ -3,6 +3,7 @@ import re
 
 import pytest
 import requests_mock
+from celery.result import AsyncResult
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.sessions.backends.db import SessionStore
@@ -73,3 +74,12 @@ class RequestFactory(BaseRequestFactory):
 @pytest.fixture()
 def rf():
     return RequestFactory()
+
+
+def return_empty_async_result(*args, **kwargs):
+    return AsyncResult(1)
+
+
+@pytest.fixture(autouse=True)
+def no_celery_tasks(monkeypatch):
+    monkeypatch.setattr('celery.Celery.send_task', return_empty_async_result)

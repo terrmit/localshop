@@ -92,9 +92,9 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
 
-CELERY_BROKER_URL = env.str('CELERY_BROKER_URL', default='redis://127.0.0.1:6379/0')
+BROKER_URL = env.str('BROKER_URL', default='redis://127.0.0.1:6379/0')
 CELERY_ACCEPT_CONTENT = ['json']
-CELERY_DEFAULT_QUEUE = 'default'
+CELERY_TASK_DEFAULT_QUEUE = 'default'
 CELERYD_PREFETCH_MULTIPLIER = 0
 CELERY_RESULT_BACKEND = 'django-db'
 CELERYBEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
