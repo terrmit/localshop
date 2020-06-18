@@ -7,6 +7,7 @@ import environ
 from celery.schedules import crontab
 from django.contrib import messages
 
+
 env = environ.Env()
 
 # Django settings for localshop project.
@@ -94,7 +95,7 @@ MESSAGE_TAGS = {
 CELERY_BROKER_URL = env.str('CELERY_BROKER_URL', default='redis://127.0.0.1:6379/0')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_DEFAULT_QUEUE = 'default'
-CELERY_PREFETCH_MULTIPLIER = 0
+CELERYD_PREFETCH_MULTIPLIER = 0
 CELERY_RESULT_BACKEND = 'django-db'
 CELERYBEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
 CELERYBEAT_SCHEDULE = {
