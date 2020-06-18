@@ -96,8 +96,8 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_DEFAULT_QUEUE = 'default'
 CELERY_PREFETCH_MULTIPLIER = 0
 CELERY_RESULT_BACKEND = 'django-db'
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
-CELERY_BEAT_SCHEDULE = {
+CELERYBEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
+CELERYBEAT_SCHEDULE = {
     'refresh-repos': {
         'task': 'localshop.apps.packages.tasks.refresh_repository_mirrors',
         'schedule': crontab(minute=30),

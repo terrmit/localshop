@@ -45,7 +45,7 @@ class PackageAddView(RepositoryMixin, generic.FormView):
 class PackageMirrorFileView(RepositoryMixin, generic.View):
     require_role = ['developer', 'owner']
 
-    def post(self, request, repo):
+    def post(self, request, repo, name):
         pk = request.POST.get('pk')
         release_file = models.ReleaseFile.objects.get(pk=pk)
         assert release_file.release.package.repository == self.repository
@@ -57,7 +57,7 @@ class PackageMirrorFileView(RepositoryMixin, generic.View):
         return redirect(
             'dashboard:package_detail',
             repo=self.repository.slug,
-            name=release_file.release.package.name)
+            name=name)
 
 
 class PackageRefreshView(RepositoryMixin, generic.View):

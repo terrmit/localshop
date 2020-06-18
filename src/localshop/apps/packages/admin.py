@@ -20,7 +20,6 @@ class ReleaseFileInline(admin.TabularInline):
 @admin.register(models.Package)
 class PackageAdmin(admin.ModelAdmin):
     readonly_fields = ('name',)
-    list_display = ['repository', '__unicode__', 'created', 'modified', 'is_local']
     list_display = ['repository', '__str__', 'created', 'modified', 'is_local']
     list_filter = ['is_local', 'repository']
     search_fields = ['name']
