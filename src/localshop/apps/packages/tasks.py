@@ -106,8 +106,8 @@ def fetch_package(repository_pk, slug):
 
 @app.task
 def download_file(pk):
-    """Download the file reference in `models.ReleaseFile` with the given pk.
-
+    """
+    Download the file reference in `models.ReleaseFile` with the given pk.
     """
     release_file = models.ReleaseFile.objects.get(pk=pk)
     logging.info("Downloading %s", release_file.url)

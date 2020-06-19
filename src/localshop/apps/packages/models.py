@@ -6,9 +6,9 @@ from tempfile import NamedTemporaryFile
 import docutils.core
 from django.conf import settings
 from django.core.files import File
-from django.urls import reverse
 from django.db import models
 from django.db.models.signals import post_delete
+from django.urls import reverse
 from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
 from docutils.utils import SystemMessage
@@ -23,28 +23,39 @@ logger = logging.getLogger(__name__)
 
 
 class Repository(TimeStampedModel):
-    name = models.CharField(max_length=250)
-    slug = models.CharField(max_length=200, unique=True)
-    description = models.CharField(max_length=500, blank=True)
-    teams = models.ManyToManyField(
-        'accounts.Team', related_name='repositories', blank=True)
 
+    name = models.CharField(max_length=250)
+    slug = models.CharField(
+        max_length=200,
+        unique=True,
+    )
+    description = models.CharField(
+        max_length=500,
+        blank=True,
+    )
+    teams = models.ManyToManyField(
+        'accounts.Team',
+        related_name='repositories',
+        blank=True,
+    )
     enable_auto_mirroring = models.BooleanField(default=True)
     upstream_pypi_url = models.CharField(
         max_length=500,
         blank=True,
         default='https://pypi.python.org/simple',
-        help_text=_(
-            "The upstream pypi URL (default: https://pypi.python.org/simple)"))
+        help_text=_("The upstream pypi URL (default: https://pypi.python.org/simple)"))
 
     def __str__(self):
         return self.name
 
     @property
     def simple_index_url(self):
-        return reverse('packages:simple_index', kwargs={
-            'repo': self.slug
-        })
+        return reverse(
+            'packages:simple_index',
+            kwargs={
+                'repo': self.slug,
+            },
+        )
 
     def user_has_access(self, user):
         if user.is_superuser:
@@ -74,13 +85,18 @@ class Repository(TimeStampedModel):
 
 
 class Classifier(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+
+    name = models.CharField(
+        max_length=255,
+        unique=True,
+    )
 
     def __str__(self):
         return self.name
 
 
 class Package(models.Model):
+
     created = AutoCreatedField(db_index=True)
     modified = AutoLastModifiedField()
     repository = models.ForeignKey(
@@ -176,8 +192,7 @@ class Release(models.Model):
     @property
     def description_html(self):
         try:
-            parts = docutils.core.publish_parts(
-                self.description, writer_name='html4css1')
+            parts = docutils.core.publish_parts(self.description, writer_name='html4css1')
             return parts['fragment']
         except SystemMessage:
             desc = escape(self.description)
@@ -192,7 +207,8 @@ def release_file_upload_to(instance, filename):
         instance.python_version,
         package.name[0],
         package.name,
-        filename)
+        filename,
+    )
 
 
 class ReleaseFile(models.Model):
@@ -258,11 +274,14 @@ class ReleaseFile(models.Model):
         return self.filename
 
     def get_absolute_url(self):
-        url = reverse('packages:download', kwargs={
-            'repo': self.release.package.repository.slug,
-            'name': self.release.package.name,
-            'pk': self.pk, 'filename': self.filename
-        })
+        url = reverse(
+            'packages:download',
+            kwargs={
+                'repo': self.release.package.repository.slug,
+                'name': self.release.package.name,
+                'pk': self.pk, 'filename': self.filename,
+            },
+        )
         return '%s#md5=%s' % (url, self.md5_digest)
 
     def save_filecontent(self, filename, fh):
@@ -275,7 +294,8 @@ class ReleaseFile(models.Model):
         return self.distribution and self.distribution.storage.exists(self.distribution.name)
 
     def download(self):
-        """Start a celery task to download the release file from pypi.
+        """
+        Start a celery task to download the release file from pypi.
 
         If `settings.LOCALSHOP_ISOLATED` is True then download the file
         in-process.

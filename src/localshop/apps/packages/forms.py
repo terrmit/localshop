@@ -37,7 +37,9 @@ class PackageForm(forms.ModelForm):
 
 
 class ReleaseForm(forms.ModelForm):
-    """Used to process upload or register actions from the pypi endpoint"""
+    """
+    Used to process upload or register actions from the pypi endpoint.
+    """
 
     class Meta:
         model = models.Release

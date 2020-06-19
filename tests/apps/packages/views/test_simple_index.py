@@ -64,7 +64,8 @@ def upload_post_data():
 @pytest.mark.parametrize('separator', [b'\n', b'\r\n'])
 def test_package_upload(django_app, admin_user, repository, upload_post_data,
                         separator):
-    """Test package upload with \n and \r\n as separator.
+    """
+    Test package upload with \n and \r\n as separator.
 
     \r\n is actually the correct separator but there was a bug in older python
     versions which used \n. See http://bugs.python.org/issue10510
@@ -360,7 +361,9 @@ def test_invalid_version_upload(client, settings, repository, admin_user):
 
 @pytest.mark.django_db
 def test_valid_version_upload(client, settings, repository, admin_user):
-    """Test a valid version upload when enforcement is activated"""
+    """
+    Test a valid version upload when enforcement is activated.
+    """
     settings.LOCALSHOP_VERSIONING_TYPE = 'versio.version_scheme.Simple3VersionScheme'
 
     key = admin_user.access_keys.create(comment='For testing')

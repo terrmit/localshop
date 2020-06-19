@@ -4,12 +4,12 @@ import requests
 
 
 def get_search_names(name):
-    """Return a list of values to search on when we are looking for a package
+    """
+    Return a list of values to search on when we are looking for a package
     with the given name.
 
     This is required to search on both pyramid_debugtoolbar and
     pyramid-debugtoolbar.
-
     """
     parts = re.split('[-_.]', name)
     if len(parts) == 1:

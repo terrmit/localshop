@@ -2,6 +2,7 @@ from django.conf.urls import include, url
 
 from localshop.apps.accounts import views
 
+
 app_name = 'accounts'
 
 urlpatterns = [

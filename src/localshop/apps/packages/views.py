@@ -32,10 +32,10 @@ Version.set_supported_version_schemes((
 
 class SimpleIndex(CsrfExemptMixin, RepositoryMixin, RepositoryAccessMixin,
                   generic.ListView):
-    """Index view with all available packages used by /simple url
+    """
+    Index view with all available packages used by /simple url
 
     This page is used by pip/easy_install to find packages.
-
     """
     context_object_name = 'packages'
     http_method_names = ['get', 'post']
@@ -71,7 +71,8 @@ class SimpleIndex(CsrfExemptMixin, RepositoryMixin, RepositoryAccessMixin,
 
 
 class SimpleDetail(RepositoryMixin, RepositoryAccessMixin, generic.DetailView):
-    """List all available files for a specific package.
+    """
+    List all available files for a specific package.
 
     This page is used by pip/easy_install to find the files.
     """
@@ -181,10 +182,10 @@ class DownloadReleaseFile(RepositoryMixin, RepositoryAccessMixin,
 
 
 def handle_register_or_upload(post_data, files, user, repository):
-    """Process a `register` or `upload` comment issued via distutils.
+    """
+    Process a `register` or `upload` comment issued via distutils.
 
     This method is called with the authenticated user.
-
     """
     name = post_data.get('name')
     version = post_data.get('version')

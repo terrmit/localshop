@@ -186,10 +186,10 @@ def login(request, template_name='registration/login.html',
           redirect_field_name=REDIRECT_FIELD_NAME,
           authentication_form=forms.AuthenticationForm,
           current_app=None, extra_context=None):
-    """Displays the login form and handles the login action.
+    """
+    Displays the login form and handles the login action.
 
-    Copy from Django source code, added abilithy to set remember_me
-
+    Copy from Django source code, added abilithy to set remember_me.
     """
     redirect_to = request.POST.get(redirect_field_name,
                                    request.GET.get(redirect_field_name, ''))

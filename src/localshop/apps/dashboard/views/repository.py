@@ -28,11 +28,11 @@ class RepositoryCreateView(PermissionRequiredMixin, generic.CreateView):
 
 
 class RepositoryMixin(AccessMixin):
-    """Mixin for repository specific views
+    """
+    Mixin for repository specific views
 
     This mixin is also responsible for checking the permissions of the user
     to the given repository.
-
     """
     require_role = ['owner']
     repository_slug_name = 'repo'

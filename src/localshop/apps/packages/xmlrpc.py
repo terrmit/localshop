@@ -24,10 +24,10 @@ def handle_request(request):
 
 
 def search(spec, operator='and'):
-    """Implement xmlrpc search command.
+    """
+    Implement xmlrpc search command.
 
-    This only searches through the mirrored and private packages
-
+    This only searches through the mirrored and private packages.
     """
     field_map = {
         'name': 'name__icontains',

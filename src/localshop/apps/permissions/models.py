@@ -15,7 +15,9 @@ class CIDRManager(models.Manager):
 
 
 class CIDR(models.Model):
-    """Allow access based on the IP address of the client."""
+    """
+    Allow access based on the IP address of the client.
+    """
 
     objects = CIDRManager()
 
@@ -67,7 +69,9 @@ class CredentialQuerySet(models.QuerySet):
 
 
 class Credential(models.Model):
-    """Credentials are repository bound"""
+    """
+    Credentials are repository bound.
+    """
 
     objects = CredentialQuerySet.as_manager()
 
@@ -100,7 +104,10 @@ class Credential(models.Model):
         default=True,
         help_text=_("Indicate if these credentials allow uploading new files"),
     )
-    deactivated = models.DateTimeField(blank=True, null=True)
+    deactivated = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return self.access_key

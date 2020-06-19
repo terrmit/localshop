@@ -2,9 +2,8 @@ import uuid
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-from django.urls import reverse
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
+from django.urls import reverse
 from django.utils.translation import ugettext as _
 from model_utils.fields import AutoCreatedField
 from model_utils.models import TimeStampedModel
@@ -18,12 +17,13 @@ class AccessKeyQuerySet(models.QuerySet):
 
     def is_allowed(self, repository, access_key, secret_key):
         return (
-            self
-            .filter(
+            self.filter(
                 user__team_memberships__team__repositories=repository,
                 access_key=access_key,
-                secret_key=secret_key)
-            .exists())
+                secret_key=secret_key,
+            )
+            .exists()
+        )
 
 
 class AccessKey(models.Model):
@@ -68,7 +68,6 @@ class AccessKey(models.Model):
         return True
 
 
-@python_2_unicode_compatible
 class Team(TimeStampedModel):
 
     name = models.CharField(max_length=200)

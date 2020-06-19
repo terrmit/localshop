@@ -2,6 +2,7 @@ from django.conf.urls import include, url
 
 from localshop.apps.dashboard import views
 
+
 app_name = 'dashboard'
 
 repository_urls = [

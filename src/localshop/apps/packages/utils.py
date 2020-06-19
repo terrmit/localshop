@@ -11,7 +11,8 @@ logger = logging.getLogger(__name__)
 
 
 def alter_old_distutils_request(request: WSGIRequest):
-    """Alter the request body for compatibility with older distutils clients
+    """
+    Alter the request body for compatibility with older distutils clients
 
     Due to a bug in the Python distutils library, the request post is sent
     using \n as a separator instead of the \r\n that the HTTP spec demands.
@@ -59,7 +60,9 @@ def alter_old_distutils_request(request: WSGIRequest):
 
 
 def delete_files(sender, **kwargs):
-    """Signal callback for deleting old files when database item is deleted"""
+    """
+    Signal callback for deleting old files when database item is deleted.
+    """
     instance = kwargs['instance']
 
     if not hasattr(instance.distribution, 'path'):
@@ -86,7 +89,9 @@ def delete_files(sender, **kwargs):
 
 
 def md5_hash_file(fh):
-    """Return the md5 hash of the given file-object"""
+    """
+    Return the md5 hash of the given file-object.
+    """
     md5 = hashlib.md5()
     while True:
         data = fh.read(8192)
@@ -97,7 +102,10 @@ def md5_hash_file(fh):
 
 
 def get_versio_versioning_scheme(full_class_path):
-    """Return a class based on it's full path"""
+    """
+    Return a class based on it's full path.
+    """
+
     module_path = '.'.join(full_class_path.split('.')[0:-1])
     class_name = full_class_path.split('.')[-1]
     try:
