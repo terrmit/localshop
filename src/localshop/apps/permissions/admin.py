@@ -10,6 +10,5 @@ class CidrAdmin(admin.ModelAdmin):
 
 @admin.register(models.Credential)
 class CredentialAdmin(admin.ModelAdmin):
-    list_display = [
-        'repository', 'access_key', 'created', 'comment', 'allow_upload']
+    list_display = ['repository', 'access_key', 'created', 'comment', 'allow_upload']
     list_filter = ['repository', 'allow_upload']

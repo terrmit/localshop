@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.urls import reverse
 from django.shortcuts import redirect, get_object_or_404
-from django.utils.text import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
 from localshop.apps.dashboard import forms
@@ -14,7 +14,7 @@ __all__ = [
     'PackageAddView',
     'PackageMirrorFileView',
     'PackageRefreshView',
-    'PackageDetailView'
+    'PackageDetailView',
 ]
 
 

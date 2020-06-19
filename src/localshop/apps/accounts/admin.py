@@ -8,21 +8,9 @@ from django.utils.translation import ugettext_lazy as _
 from localshop.apps.accounts import models
 
 
-@admin.register(models.AccessKey)
-class AccessKeyAdmin(admin.ModelAdmin):
-    model = models.AccessKey
-    list_display = ['user', 'created', 'last_usage']
-
-
 class TeamMemberInline(admin.TabularInline):
     model = models.TeamMember
     list_display = ['user', 'role']
-
-
-@admin.register(models.Team)
-class TeamAdmin(admin.ModelAdmin):
-    list_display = ['name']
-    inlines = [TeamMemberInline]
 
 
 class UserCreationForm(forms.ModelForm):
@@ -74,6 +62,18 @@ class UserChangeForm(forms.ModelForm):
         # This is done here, rather than on the field, because the
         # field does not have access to the initial value
         return self.initial["password"]
+
+
+@admin.register(models.AccessKey)
+class AccessKeyAdmin(admin.ModelAdmin):
+    model = models.AccessKey
+    list_display = ['user', 'created', 'last_usage']
+
+
+@admin.register(models.Team)
+class TeamAdmin(admin.ModelAdmin):
+    list_display = ['name']
+    inlines = [TeamMemberInline]
 
 
 @admin.register(models.User)

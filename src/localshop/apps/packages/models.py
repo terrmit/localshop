@@ -1,4 +1,3 @@
-import re
 import logging
 import os
 from shutil import copyfileobj
@@ -8,11 +7,9 @@ import docutils.core
 from django.conf import settings
 from django.core.files import File
 from django.urls import reverse
-from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models.signals import post_delete
 from django.utils.html import escape
-from django.utils.text import ugettext_lazy as _
 from django.utils.translation import ugettext_lazy as _
 from docutils.utils import SystemMessage
 from model_utils import Choices
@@ -85,20 +82,18 @@ class Classifier(models.Model):
 
 class Package(models.Model):
     created = AutoCreatedField(db_index=True)
-
     modified = AutoLastModifiedField()
-
-    repository = models.ForeignKey(Repository, related_name='packages', on_delete=models.CASCADE)
-
+    repository = models.ForeignKey(
+        Repository,
+        related_name='packages',
+        on_delete=models.CASCADE,
+    )
     name = models.SlugField(max_length=200)
     normalized_name = models.SlugField(max_length=200)
-
     #: Indicate if this package is local (a private package)
     is_local = models.BooleanField(default=False)
-
     #: Timestamp when we last retrieved the metadata
     update_timestamp = models.DateTimeField(null=True)
-
     owners = models.ManyToManyField(settings.AUTH_USER_MODEL)
 
     class Meta:
@@ -133,31 +128,43 @@ class Package(models.Model):
 class Release(models.Model):
 
     created = AutoCreatedField()
-
     modified = AutoLastModifiedField()
-
-    author = models.CharField(max_length=128, blank=True)
-
-    author_email = models.CharField(max_length=255, blank=True)
-
+    author = models.CharField(
+        max_length=128,
+        blank=True,
+    )
+    author_email = models.CharField(
+        max_length=255,
+        blank=True,
+    )
     classifiers = models.ManyToManyField(Classifier)
-
     description = models.TextField(blank=True)
-
-    download_url = models.CharField(max_length=200, blank=True, null=True)
-
-    home_page = models.CharField(max_length=200, blank=True, null=True)
-
+    download_url = models.CharField(
+        max_length=200,
+        blank=True,
+        null=True,
+    )
+    home_page = models.CharField(
+        max_length=200,
+        blank=True,
+        null=True,
+    )
     license = models.TextField(blank=True)
-
-    metadata_version = models.CharField(max_length=64, default=1.0)
-
-    package = models.ForeignKey(Package, related_name="releases", on_delete=models.CASCADE)
-
+    metadata_version = models.CharField(
+        max_length=64,
+        default=1.0,
+    )
+    package = models.ForeignKey(
+        Package,
+        related_name="releases",
+        on_delete=models.CASCADE,
+    )
     summary = models.TextField(blank=True)
-
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
-
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        on_delete=models.CASCADE,
+    )
     version = models.CharField(max_length=512)
 
     class Meta:
@@ -202,31 +209,50 @@ class ReleaseFile(models.Model):
     )
 
     created = AutoCreatedField()
-
     modified = AutoLastModifiedField()
-
-    release = models.ForeignKey(Release, related_name="files", on_delete=models.CASCADE)
-
+    release = models.ForeignKey(
+        Release,
+        related_name="files",
+        on_delete=models.CASCADE,
+    )
     size = models.IntegerField(null=True)
-
-    filetype = models.CharField(max_length=25, choices=TYPES)
-
-    distribution = models.FileField(upload_to=release_file_upload_to, max_length=512)
-
-    filename = models.CharField(max_length=200, blank=True, null=True)
-
+    filetype = models.CharField(
+        max_length=25,
+        choices=TYPES,
+    )
+    distribution = models.FileField(
+        upload_to=release_file_upload_to,
+        max_length=512,
+    )
+    filename = models.CharField(
+        max_length=200,
+        blank=True,
+        null=True,
+    )
     md5_digest = models.CharField(max_length=512)
-
     python_version = models.CharField(max_length=50)
-
-    requires_python = models.CharField(max_length=255, blank=True, null=True)
-
-    url = models.CharField(max_length=1024, blank=True)
-
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
+    requires_python = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+    )
+    url = models.CharField(
+        max_length=1024,
+        blank=True,
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        on_delete=models.CASCADE,
+    )
 
     class Meta:
-        unique_together = ('release', 'filetype', 'python_version', 'filename')
+        unique_together = (
+            'release',
+            'filetype',
+            'python_version',
+            'filename',
+        )
 
     def __str__(self):
         return self.filename
@@ -264,5 +290,7 @@ class ReleaseFile(models.Model):
 
 if settings.LOCALSHOP_DELETE_FILES:
     post_delete.connect(
-        delete_files, sender=ReleaseFile,
-        dispatch_uid="localshop.apps.packages.utils.delete_files")
+        receiver=delete_files,
+        sender=ReleaseFile,
+        dispatch_uid="localshop.apps.packages.utils.delete_files",
+    )

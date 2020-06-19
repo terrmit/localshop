@@ -16,16 +16,27 @@ class CIDRManager(models.Manager):
 
 class CIDR(models.Model):
     """Allow access based on the IP address of the client."""
-    repository = models.ForeignKey(
-        'packages.Repository', related_name='cidr_list', on_delete=models.CASCADE)
-    cidr = models.CharField(
-        'CIDR', max_length=128, help_text='IP addresses and/or subnet')
-    label = models.CharField(
-        'label', max_length=128, blank=True, null=True,
-        help_text='Human-readable name (optional)')
-    require_credentials = models.BooleanField(default=True)
 
     objects = CIDRManager()
+
+    repository = models.ForeignKey(
+        'packages.Repository',
+        related_name='cidr_list',
+        on_delete=models.CASCADE,
+    )
+    cidr = models.CharField(
+        'CIDR',
+        max_length=128,
+        help_text='IP addresses and/or subnet',
+    )
+    label = models.CharField(
+        'label',
+        max_length=128,
+        blank=True,
+        null=True,
+        help_text='Human-readable name (optional)',
+    )
+    require_credentials = models.BooleanField(default=True)
 
     def __str__(self):
         return self.cidr
@@ -47,32 +58,49 @@ class CredentialQuerySet(models.QuerySet):
     def authenticate(self, access_key, secret_key):
         return(
             self.active()
-            .filter(access_key=access_key, secret_key=secret_key)
-            .first())
+            .filter(
+                access_key=access_key,
+                secret_key=secret_key,
+            )
+            .first()
+        )
 
 
 class Credential(models.Model):
     """Credentials are repository bound"""
-    created = AutoCreatedField()
 
-    repository = models.ForeignKey('packages.Repository', related_name='credentials', on_delete=models.CASCADE)
+    objects = CredentialQuerySet.as_manager()
+
+    created = AutoCreatedField()
+    repository = models.ForeignKey(
+        'packages.Repository',
+        related_name='credentials',
+        on_delete=models.CASCADE,
+    )
     access_key = models.UUIDField(
         verbose_name='Access key',
         help_text='The access key',
-        default=uuid.uuid4, db_index=True)
+        default=uuid.uuid4,
+        db_index=True,
+    )
     secret_key = models.UUIDField(
         verbose_name='Secret key',
-        help_text='The secret key', default=uuid.uuid4, db_index=True)
+        help_text='The secret key',
+        default=uuid.uuid4,
+        db_index=True,
+    )
     comment = models.CharField(
-        max_length=255, blank=True, null=True, default='',
-        help_text="A comment about this credential, e.g. where it's being used")
-
+        max_length=255,
+        blank=True,
+        null=True,
+        default='',
+        help_text="A comment about this credential, e.g. where it's being used",
+    )
     allow_upload = models.BooleanField(
         default=True,
-        help_text=_("Indicate if these credentials allow uploading new files"))
+        help_text=_("Indicate if these credentials allow uploading new files"),
+    )
     deactivated = models.DateTimeField(blank=True, null=True)
-
-    objects = CredentialQuerySet.as_manager()
 
     def __str__(self):
         return self.access_key.hex

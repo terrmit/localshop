@@ -27,24 +27,38 @@ class AccessKeyQuerySet(models.QuerySet):
 
 
 class AccessKey(models.Model):
-    created = AutoCreatedField()
-
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, related_name='access_keys', on_delete=models.CASCADE)
-
-    access_key = models.UUIDField(
-        verbose_name='Access key', help_text='The access key',
-        default=uuid.uuid4, db_index=True)
-    secret_key = models.UUIDField(
-        verbose_name='Secret key', help_text='The secret key',
-        default=uuid.uuid4, db_index=True)
-    comment = models.CharField(
-        max_length=255, blank=True, null=True, default='',
-        help_text=_(
-            "A comment about this credential, e.g. where it's being used"))
-    last_usage = models.DateTimeField(null=True, blank=True)
 
     objects = AccessKeyQuerySet.as_manager()
+
+    created = AutoCreatedField()
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='access_keys',
+        on_delete=models.CASCADE,
+    )
+    access_key = models.UUIDField(
+        verbose_name='Access key',
+        help_text='The access key',
+        default=uuid.uuid4,
+        db_index=True,
+    )
+    secret_key = models.UUIDField(
+        verbose_name='Secret key',
+        help_text='The secret key',
+        default=uuid.uuid4,
+        db_index=True,
+    )
+    comment = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        default='',
+        help_text=_("A comment about this credential, e.g. where it's being used"),
+    )
+    last_usage = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
 
     class Meta:
         ordering = ['-created']
@@ -56,10 +70,16 @@ class AccessKey(models.Model):
 
 @python_2_unicode_compatible
 class Team(TimeStampedModel):
+
     name = models.CharField(max_length=200)
-    description = models.CharField(max_length=500, blank=True)
+    description = models.CharField(
+        max_length=500,
+        blank=True,
+    )
     users = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, through='TeamMember')
+        settings.AUTH_USER_MODEL,
+        through='TeamMember',
+    )
 
     def __str__(self):
         return self.name
@@ -72,13 +92,24 @@ class Team(TimeStampedModel):
 
 
 class TeamMember(TimeStampedModel):
-    team = models.ForeignKey(Team, related_name='members', on_delete=models.CASCADE)
+
+    team = models.ForeignKey(
+        Team,
+        related_name='members',
+        on_delete=models.CASCADE,
+    )
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, related_name='team_memberships', on_delete=models.CASCADE)
-    role = models.CharField(max_length=100, choices=[
-        ('owner', _("Owner")),
-        ('developer', _("Developer")),
-    ])
+        settings.AUTH_USER_MODEL,
+        related_name='team_memberships',
+        on_delete=models.CASCADE,
+    )
+    role = models.CharField(
+        max_length=100,
+        choices=[
+            ('owner', _("Owner")),
+            ('developer', _("Developer")),
+        ],
+    )
 
     class Meta:
         unique_together = [
