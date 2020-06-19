@@ -5,10 +5,34 @@ from localshop.apps.permissions import models
 
 @admin.register(models.CIDR)
 class CidrAdmin(admin.ModelAdmin):
-    list_display = ['cidr', 'label']
+
+    raw_id_fields = (
+        'repository',
+
+    )
+
+    list_display = (
+        'cidr',
+        'label',
+    )
 
 
 @admin.register(models.Credential)
 class CredentialAdmin(admin.ModelAdmin):
-    list_display = ['repository', 'access_key', 'created', 'comment', 'allow_upload']
-    list_filter = ['repository', 'allow_upload']
+
+    raw_id_fields = (
+        'repository',
+    )
+
+    list_display = (
+        'repository',
+        'access_key',
+        'created',
+        'comment',
+        'allow_upload',
+    )
+
+    list_filter = (
+        'repository',
+        'allow_upload',
+    )

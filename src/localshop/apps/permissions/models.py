@@ -103,7 +103,7 @@ class Credential(models.Model):
     deactivated = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return self.access_key.hex
+        return self.access_key
 
     class Meta:
         ordering = ['-created']

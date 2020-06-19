@@ -66,37 +66,75 @@ class UserChangeForm(forms.ModelForm):
 
 @admin.register(models.AccessKey)
 class AccessKeyAdmin(admin.ModelAdmin):
-    model = models.AccessKey
-    list_display = ['user', 'created', 'last_usage']
+
+    raw_id_fields = (
+        'user',
+    )
+
+    list_display = (
+        'user',
+        'created',
+        'last_usage',
+    )
 
 
 @admin.register(models.Team)
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ['name']
-    inlines = [TeamMemberInline]
+
+    inlines = (
+        TeamMemberInline,
+    )
+
+    list_display = (
+        'name',
+    )
 
 
 @admin.register(models.User)
 class UserAdmin(UserAdmin):
+
     form = UserChangeForm
     add_form = UserCreationForm
 
-    list_display = ['email', 'is_active', 'is_staff', 'is_superuser']
-    list_filter = ['is_active', 'is_superuser']
-    fieldsets = [
-        (None, {'fields': ['username', 'email', 'password']}),
-        ('Information', {'fields': ['first_name', 'last_name']}),
-        ('Permissions', {'fields': ['is_active', 'is_staff', 'is_superuser']}),
-    ]
-
+    fieldsets = (
+        (None, {
+            'fields': ['username', 'email', 'password'],
+        }),
+        ('Information', {
+            'fields': ['first_name', 'last_name'],
+        }),
+        ('Permissions', {
+            'fields': ['is_active', 'is_staff', 'is_superuser'],
+        }),
+    )
     add_fieldsets = (
         (None, {
             'classes': ['wide'],
-            'fields': ['email', 'password1', 'password2']
+            'fields': ['email', 'password1', 'password2'],
         }),
     )
-    search_fields = ['email', 'username']
-    ordering = ['email']
+
+    list_display = (
+        'email',
+        'is_active',
+        'is_staff',
+        'is_superuser',
+    )
+
+    list_filter = (
+        'is_active',
+        'is_superuser',
+    )
+
+    search_fields = (
+        'email',
+        'username',
+    )
+
+    ordering = (
+        'email',
+    )
+
     filter_horizontal = []
 
 
