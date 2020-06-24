@@ -1,10 +1,9 @@
 import factory
-
 from django.contrib.auth import get_user_model
 
 from localshop.apps.accounts.models import Team, TeamMember
 from localshop.apps.packages.models import (
-    Repository, Package, Release, ReleaseFile)
+    Package, Release, ReleaseFile, Repository)
 from localshop.apps.permissions.models import CIDR, Credential
 
 
@@ -18,7 +17,8 @@ class RepositoryFactory(factory.DjangoModelFactory):
 
 
 class PackageFactory(factory.DjangoModelFactory):
-    name = 'test-package'
+    name = 'Test_Package'
+    normalized_name = 'test-package'
     repository = factory.SubFactory(RepositoryFactory)
 
     class Meta:
@@ -51,6 +51,7 @@ class ReleaseFileFactory(factory.DjangoModelFactory):
         a.release.version, a.filetype))
     md5_digest = '62ecd3ee980023db87945470aa2b347b'
     python_version = '2.7'
+    requires_python = 'py2'
     url = factory.LazyAttribute(lambda a: (
         'http://www.example.org/download/%s' % a.filename))
 
