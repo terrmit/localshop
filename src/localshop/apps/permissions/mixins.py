@@ -11,6 +11,8 @@ from localshop.http import HttpResponseUnauthorized
 
 logger = logging.getLogger(__name__)
 
+SAFE_METHODS = ('GET', 'HEAD', 'OPTIONS')
+
 
 class RepositoryAccessMixin(object):
 
@@ -77,8 +79,9 @@ class RepositoryAccessMixin(object):
             .first())
 
         if key and key.user.is_active:
-            key.last_usage = timezone.now()
-            key.save(update_fields=['last_usage'])
+            if request.method not in SAFE_METHODS:
+                key.last_usage = timezone.now()
+                key.save(update_fields=['last_usage'])
 
             if self.repository.user_has_access(key.user):
                 request.credentials = key
