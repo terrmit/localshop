@@ -10,7 +10,7 @@ urlpatterns = [
     url(r'^(?P<repo>[-\._\w]+)/?$', views.SimpleIndex.as_view(),
         name='simple_index'),
 
-    url(r'^(?P<repo>[-\._\w]+)/(?P<slug>[-\._\w\s]+)/$',
+    url(r'^(?P<repo>[-\._\w]+)/(?P<slug>[-\._\w\s]+)/?$',
         cache_page(60)(views.SimpleDetail.as_view()),
         name='simple_detail'),
 
