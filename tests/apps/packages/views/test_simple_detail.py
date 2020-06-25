@@ -43,7 +43,7 @@ def test_success_redirect_to_normalized_name(django_app, admin_user, repository,
         }), user=admin_user)
 
     assert response.status_code == 302
-    assert response.headers['Location'] == '/repo/%s/%s/' % (
+    assert response.headers['Location'] == '/repo/%s/%s' % (
         repository.slug, release_file.release.package.normalized_name)
 
 
@@ -100,4 +100,4 @@ def test_wrong_package_name_case(django_app, admin_user, repository, pypi_stub):
         }), user=admin_user)
 
     assert response.status_code == 302
-    assert response.url == '/repo/default/minibar/'
+    assert response.url == '/repo/default/minibar'
