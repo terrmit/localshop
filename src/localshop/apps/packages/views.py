@@ -52,14 +52,20 @@ class SimpleIndex(CsrfExemptMixin, RepositoryMixin, RepositoryAccessMixin,
 
         handler = actions.get(action)
         if not handler:
+            logger.info(f"Unknown action: {action}.")
             return HttpResponseNotFound('Unknown action: %s' % action)
 
         if not request.user.is_authenticated and not request.credentials:
+            logger.info(f"User '{request.user}' is not authenticated.")
             return HttpResponseForbidden(
                 "You need to be authenticated to upload packages")
 
         # Both actions currently are upload actions, so check is simple
         if request.credentials and not request.credentials.allow_upload:
+            logger.info(
+                f"Provided access_key does not allow uploading packages {request.credentials.access_key} "
+                f"for user '{request.user}'."
+            )
             return HttpResponseForbidden(
                 "Upload is not allowed with the provided credentials")
 
@@ -195,13 +201,17 @@ def handle_register_or_upload(post_data, files, user, repository):
         try:
             Version(version, scheme=scheme)
         except AttributeError:
+            logger.info(
+                f"Invalid package version supplied '{version}' "
+                f"for '{settings.LOCALSHOP_VERSIONING_TYPE}' scheme."
+            )
             response = HttpResponseBadRequest(
                 reason="Invalid version supplied '{!s}' for '{!s}' scheme.".format(
                     version, settings.LOCALSHOP_VERSIONING_TYPE))
             return response
 
     if not name or not version:
-        logger.info("Missing name or version for package")
+        logger.info(f"No name ({name}) or version ({version}) given for uploaded package.")
         return HttpResponseBadRequest('No name or version given')
 
     try:
@@ -210,6 +220,7 @@ def handle_register_or_upload(post_data, files, user, repository):
         # Error out when we try to override a mirror'ed package for now
         # not sure what the best thing is
         if not package.is_local:
+            logger.info(f"Trying to override a mirrored package '{package.name}'.")
             return HttpResponseBadRequest(
                 '%s is a pypi package!' % package.name)
 
@@ -224,11 +235,13 @@ def handle_register_or_upload(post_data, files, user, repository):
     # Validate the data
     form = forms.ReleaseForm(post_data, instance=release)
     if not form.is_valid():
+        logger.info(f"Release form is invalid: {form.errors.values()}.")
         return HttpResponseBadRequest(reason=form.errors.values()[0][0])
 
     if not package:
         pkg_form = forms.PackageForm(post_data, repository=repository)
         if not pkg_form.is_valid():
+            logger.info(f"Package form is invalid: {pkg_form.errors.values()}.")
             return HttpResponseBadRequest(
                 reason=six.next(six.itervalues(pkg_form.errors))[0])
         package = pkg_form.save()
@@ -246,6 +259,7 @@ def handle_register_or_upload(post_data, files, user, repository):
         try:
             release_file = release.files.get(filename=filename)
             if settings.LOCALSHOP_RELEASE_OVERWRITE is False:
+                logger.info(f"Version '{release.version}' of package '{package.name}' already exists.")
                 message = 'That it already released, please bump version.'
                 return HttpResponseBadRequest(message)
         except ObjectDoesNotExist:
@@ -255,6 +269,7 @@ def handle_register_or_upload(post_data, files, user, repository):
         form_file = forms.ReleaseFileForm(
             post_data, files, instance=release_file)
         if not form_file.is_valid():
+            logger.info(f"ReleaseFile form is invalid: {form_file.errors.values()}")
             return HttpResponseBadRequest('ERRORS %s' % form_file.errors)
         release_file = form_file.save(commit=False)
         release_file.save()

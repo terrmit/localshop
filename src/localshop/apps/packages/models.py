@@ -241,12 +241,12 @@ class ReleaseFile(models.Model):
         max_length=512,
     )
     filename = models.CharField(
-        max_length=200,
+        max_length=255,
         blank=True,
         null=True,
     )
     md5_digest = models.CharField(max_length=512)
-    python_version = models.CharField(max_length=100)
+    python_version = models.CharField(max_length=255)
     requires_python = models.CharField(
         max_length=255,
         blank=True,
