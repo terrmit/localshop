@@ -334,8 +334,7 @@ def test_package_name_with_hyphen_instead_underscore(django_app, repository, adm
 
 @pytest.mark.django_db
 def test_invalid_version_upload(client, settings, repository, admin_user):
-    settings.LOCALSHOP_VERSIONING_TYPE = 'versio.version_scheme.Simple3VersionScheme'
-
+    settings.LOCALSHOP_VERSION_VALIDATION = True
     key = admin_user.access_keys.create(comment='For testing')
     auth = {
         'HTTP_AUTHORIZATION': basic_auth_header(key.access_key, key.secret_key)
@@ -344,8 +343,8 @@ def test_invalid_version_upload(client, settings, repository, admin_user):
     data = {
         ':action': 'file_upload',
         'name': 'package-name',
-        'version': '01.0',
-        'metadata_version': '1.0',
+        'version': '2.4.4.post0.4.3b2',
+        'metadata_version': '2.4.4',
         'md5_digest': '06ffe94789d7bd9efba1109f40e935cf',
         'filetype': 'sdist',
         'content': NamedStringIO(b'Hi', name='blabla'),
@@ -356,7 +355,7 @@ def test_invalid_version_upload(client, settings, repository, admin_user):
 
     assert response.status_code == 400
     assert response.reason_phrase == (
-        "Invalid version supplied '01.0' for 'versio.version_scheme.Simple3VersionScheme' scheme.")
+        "Invalid version supplied '2.4.4.post0.4.3b2' for 'package-name' package.")
 
 
 @pytest.mark.django_db
@@ -364,8 +363,7 @@ def test_valid_version_upload(client, settings, repository, admin_user):
     """
     Test a valid version upload when enforcement is activated.
     """
-    settings.LOCALSHOP_VERSIONING_TYPE = 'versio.version_scheme.Simple3VersionScheme'
-
+    settings.LOCALSHOP_VERSION_VALIDATION = True
     key = admin_user.access_keys.create(comment='For testing')
     auth = {
         'HTTP_AUTHORIZATION': basic_auth_header(key.access_key, key.secret_key)

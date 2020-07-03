@@ -4,30 +4,23 @@ from wsgiref.util import FileWrapper
 from braces.views import CsrfExemptMixin
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from django.urls import reverse
-from django.db.models import Q
-from django.http import (
-    Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden,
-    HttpResponseNotFound)
+from django.http import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, HttpResponseNotFound
 from django.shortcuts import redirect
+from django.urls import reverse
 from django.utils import six
 from django.views import generic
-from versio.version import Version
-from versio.version_scheme import (
-    Pep440VersionScheme, Simple3VersionScheme, Simple4VersionScheme)
+from packaging.version import InvalidVersion, Version
 
 from localshop.apps.packages import forms, models
 from localshop.apps.packages.mixins import RepositoryMixin
 from localshop.apps.packages.pypi import normalize_name
 from localshop.apps.packages.tasks import fetch_package
-from localshop.apps.packages.utils import (
-    alter_old_distutils_request, get_versio_versioning_scheme)
+from localshop.apps.packages.utils import alter_old_distutils_request
 from localshop.apps.permissions.mixins import RepositoryAccessMixin
 from localshop.utils import enqueue
 
+
 logger = logging.getLogger(__name__)
-Version.set_supported_version_schemes((
-    Simple3VersionScheme, Simple4VersionScheme, Pep440VersionScheme,))
 
 
 class SimpleIndex(CsrfExemptMixin, RepositoryMixin, RepositoryAccessMixin,
@@ -196,18 +189,15 @@ def handle_register_or_upload(post_data, files, user, repository):
     name = post_data.get('name')
     version = post_data.get('version')
 
-    if settings.LOCALSHOP_VERSIONING_TYPE:
-        scheme = get_versio_versioning_scheme(settings.LOCALSHOP_VERSIONING_TYPE)
+    if settings.LOCALSHOP_VERSION_VALIDATION:
         try:
-            Version(version, scheme=scheme)
-        except AttributeError:
+            Version(version)
+        except InvalidVersion:
             logger.info(
-                f"Invalid package version supplied '{version}' "
-                f"for '{settings.LOCALSHOP_VERSIONING_TYPE}' scheme."
+                f"Invalid package version supplied '{version}' for '{name}' package."
             )
             response = HttpResponseBadRequest(
-                reason="Invalid version supplied '{!s}' for '{!s}' scheme.".format(
-                    version, settings.LOCALSHOP_VERSIONING_TYPE))
+                reason="Invalid version supplied '{!s}' for '{!s}' package.".format(version, name))
             return response
 
     if not name or not version:

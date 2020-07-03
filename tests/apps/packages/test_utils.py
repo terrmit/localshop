@@ -1,10 +1,8 @@
 from django.core.handlers.wsgi import WSGIRequest
 from django.test.client import FakePayload
 from django.utils.datastructures import MultiValueDict
-from versio.version_scheme import VersionScheme
 
-from localshop.apps.packages.utils import (
-    alter_old_distutils_request, get_versio_versioning_scheme)
+from localshop.apps.packages.utils import alter_old_distutils_request
 
 
 def test_alter_old_distutils_request():
@@ -101,8 +99,3 @@ def test_alter_old_distutils_request():
 
     assert request.POST == expected_post
     assert request.FILES == expected_files
-
-
-def test_versio_schema_retrieval():
-    obj = get_versio_versioning_scheme('versio.version_scheme.Pep440VersionScheme')
-    assert isinstance(obj, VersionScheme)

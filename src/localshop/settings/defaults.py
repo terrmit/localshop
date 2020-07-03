@@ -181,6 +181,7 @@ LOCALSHOP_RELEASE_OVERWRITE = True
 # Use where you have Nginx/Apache/etc as a reverse proxy infront of Localshop/Gunicorn.
 LOCALSHOP_USE_PROXIED_IP = False
 LOCALSHOP_VERSIONING_TYPE = None
+LOCALSHOP_VERSION_VALIDATION = False
 
 # Load the user settings
 filename = os.path.expanduser('~/conf/localshop.conf.py')

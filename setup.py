@@ -38,7 +38,6 @@ setup(
         'netaddr==0.7.20',
         'psycopg2==2.8.5',
         'redis==3.5.3',
-        'Versio==0.4.0',
     ],
     tests_require=tests_require,
     extras_require={'test': tests_require},

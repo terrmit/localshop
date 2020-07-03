@@ -81,3 +81,10 @@ If you want to validated versions you can choose any `Versio <https://pypi.pytho
 - **PerlVersionScheme** which supports 2 numerical part versions where the 
   second part is at least two digits A.BB where A and B - are integers and B is 
   zero padded on the left. For example: 1.02, 1.34, 1.567)
+
+``LOCALSHOP_VERSION_VALIDATION``
+-------------------------------
+
+:default: ``False``
+
+If set to ``True``, the package version will be validated during the uploading.
