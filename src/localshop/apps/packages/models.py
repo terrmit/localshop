@@ -15,6 +15,7 @@ from docutils.utils import SystemMessage
 from model_utils import Choices
 from model_utils.fields import AutoCreatedField, AutoLastModifiedField
 from model_utils.models import TimeStampedModel
+from pkg_resources import parse_version
 
 from localshop.apps.packages.utils import delete_files
 
@@ -135,6 +136,11 @@ class Package(models.Model):
             files = dict((r.filename, r) for r in release.files.all())
             result[release.version] = (release, files)
         return result
+
+    def get_ordered_releases(self):
+        releases = list(self.releases.all())
+        releases.sort(key=lambda rel: parse_version(rel.version), reverse=True)
+        return releases
 
     @property
     def last_release(self):
