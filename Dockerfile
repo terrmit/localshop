@@ -24,6 +24,7 @@ RUN apk add \
     python3-dev \
     redis \
     zlib-dev \
+    libffi-dev \
     && rm -rf /var/cache/apk/*
 
 RUN pip3 install honcho uwsgi==2.0.15

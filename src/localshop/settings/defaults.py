@@ -34,7 +34,6 @@ USE_TZ = True
 
 MEDIA_ROOT = env.str('LOCALSHOP_ROOT', os.path.join(PROJECT_ROOT, 'public', 'media'))
 
-
 # Staticfiles
 STATIC_ROOT = env.str('STATIC_ROOT', os.path.join(PROJECT_ROOT, 'public', 'static'))
 STATIC_URL = '/static/'
@@ -81,12 +80,10 @@ TEMPLATES = [
     },
 ]
 
-
 ROOT_URLCONF = 'localshop.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'localshop.wsgi.application'
-
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
@@ -120,7 +117,6 @@ INSTALLED_APPS = [
 
     'django_celery_beat',
     'django_celery_results',
-    'social_django',
     'widget_tweaks',
 
     'localshop',
@@ -138,7 +134,6 @@ LOGIN_URL = '/accounts/login'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_URL = '/accounts/logout'
 AUTH_USER_MODEL = 'accounts.User'
-
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -186,16 +181,7 @@ LOCALSHOP_RELEASE_OVERWRITE = True
 # Use where you have Nginx/Apache/etc as a reverse proxy infront of Localshop/Gunicorn.
 LOCALSHOP_USE_PROXIED_IP = False
 LOCALSHOP_VERSIONING_TYPE = None
-
-OAUTH2_PROVIDER = env.str('OAUTH2_PROVIDER', '')
-
-if OAUTH2_PROVIDER == 'azuread-oauth2':
-    AUTHENTICATION_BACKENDS.append('social_core.backends.azuread.AzureADOAuth2')
-
-    SOCIAL_AUTH_AZUREAD_OAUTH2_KEY = env.str('OAUTH2_APPLICATION_ID', default='')
-    SOCIAL_AUTH_AZUREAD_OAUTH2_SECRET = env.str('OAUTH2_SECRET_KEY', default='')
-    SOCIAL_AUTH_PROTECTED_USER_FIELDS = ['username']
-
+LOCALSHOP_VERSION_VALIDATION = False
 
 # Load the user settings
 filename = os.path.expanduser('~/conf/localshop.conf.py')
