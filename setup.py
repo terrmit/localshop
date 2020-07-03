@@ -1,5 +1,6 @@
 from setuptools import find_packages, setup
 
+
 readme = []
 with open('README.rst', 'r') as fh:
     readme = fh.readlines()
@@ -34,11 +35,10 @@ setup(
         'django-widget-tweaks==1.4.5',
         'Django==1.11.29',
         'docutils==0.14',
-        'netaddr==0.7.19',
+        'netaddr==0.7.20',
         'psycopg2==2.8.5',
         'redis==3.5.3',
-        'social-auth-app-django==1.2.0',
-        'Versio==0.3.0',
+        'Versio==0.4.0',
     ],
     tests_require=tests_require,
     extras_require={'test': tests_require},
